@@ -1,8 +1,7 @@
 import os
 from pathlib import Path
 from utils import *
-from array import array
-from ED6ASInstructionsSet import instruction
+import ED6ASInstructionsSet
 
 class function(object):
     def __init__(self, addr, ID):
@@ -16,16 +15,14 @@ class function(object):
         while current_addr < self.addr_end:
             instr = ED6ASInstructionsSet.instruction(content, current_addr)
             self.instructions.append(instr)
+            current_addr = instr.end_addr
 
 def decompile(file):
-    data = array('B')
+    
     filename = Path(file).stem
     filesize = os.path.getsize(file)
-    
-
-    with open(file, 'rb') as f:
-        data.fromfile(f, filesize)
-
+    f = open(file, 'rb')
+    data = bytearray(f.read())
     first_sec_addr = read_int(data, 0, 2)
     second_sec_addr = read_int(data, 2, 2)
     uint16_0 = read_int(data, 4, 2)
@@ -39,14 +36,14 @@ def decompile(file):
         current_chip_id = read_int(data, current_addr, 4)
         current_addr = current_addr + 4
 
-    function_dic = {} #Key: ID, Value: Function
+    functions = []
 
     current_addr = first_sec_addr
     ID_fun = 0 
 
     while (current_addr < second_sec_addr):
         ptr = read_int(data, current_addr, 2)
-        function_dic[ID_fun] = function(ptr, ID_fun)
+        functions.append(function(ptr, ID_fun))
         ID_fun = ID_fun + 1
         current_addr = current_addr + 2
 
@@ -57,19 +54,17 @@ def decompile(file):
 
     current_addr = current_addr + 0x10
 
-    functions_sorted_by_addr = function_ptrs.copy()
-    functions_sorted_by_addr.sort(key=lambda fun: fun.addr_start) 
+    functions.sort(key=lambda fun: fun.addr_start) 
 
 
 
-    for i_fun in range(0, functions_sorted_by_addr.size()-1):
-        fun = functions_sorted_by_addr[i_fun]
-        function_dic[fun.ID].addr_end = functions_sorted_by_addr[i_fun + 1].addr_start
+    for i_fun in range(0, len(functions)-1): 
+        functions[i_fun].addr_end = functions[i_fun + 1].addr_start
+    functions[len(functions)-1].addr_end = filesize
 
-    fun = functions_sorted_by_addr[functions_sorted_by_addr.size()-1]
-    function_dic[fun.ID].addr_end = filesize
+    functions.sort(key=lambda fun: fun.ID) 
 
-    for fun in function_dic:
+    for fun in functions:
         fun.add_instructions(data)
 
     print(current_addr)

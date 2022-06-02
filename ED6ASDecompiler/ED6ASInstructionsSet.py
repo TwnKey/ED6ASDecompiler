@@ -83,7 +83,7 @@ def OP_03(instr, content) -> int:
 
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
-    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
     return current_addr 
 def OP_04(instr, content) -> int:
     instr.name = "OP_04"
@@ -97,7 +97,6 @@ def OP_05(instr, content) -> int:
     instr.name = "OP_05"
     current_addr = instr.addr + 1
 
-    current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U32)
@@ -157,10 +156,22 @@ def OP_0C(instr, content) -> int:
 
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
-    current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.S16)
     current_addr = AddOperand(instr, current_addr, content, Type.U32)
     return current_addr 
+
+def OP_0D(instr, content) -> int:
+    instr.name = "OP_0D"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr 
+
 def OP_0E(instr, content) -> int:
     instr.name = "OP_0E"
     current_addr = instr.addr + 1
@@ -172,6 +183,23 @@ def OP_0E(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.S32)
     current_addr = AddOperand(instr, current_addr, content, Type.S32)
     return current_addr 
+
+def OP_0F(instr, content) -> int:
+    instr.name = "OP_0F"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr 
+
+def OP_10(instr, content) -> int:
+    instr.name = "OP_10"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr 
+
 def OP_11(instr, content) -> int:
     instr.name = "OP_11"
     current_addr = instr.addr + 1
@@ -240,6 +268,33 @@ def OP_18(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.U8)   
     return current_addr
 
+def OP_19(instr, content) -> int:
+    instr.name = "OP_19"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.STR)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)   
+    return current_addr
+
+def OP_1A(instr, content) -> int:
+    instr.name = "OP_1A"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    return current_addr
 
 def OP_1B(instr, content) -> int:
     instr.name = "OP_1B"
@@ -269,6 +324,12 @@ def OP_1E(instr, content) -> int:
     current_addr = instr.addr + 1
 
     current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    return current_addr
+
+def OP_1F(instr, content) -> int:
+    instr.name = "OP_1F"
+    current_addr = instr.addr + 1
+
     return current_addr
 
 def OP_20(instr, content) -> int:
@@ -325,6 +386,16 @@ def OP_25(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U16)
     return current_addr
+
+def OP_26(instr, content) -> int:
+    instr.name = "OP_26"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    return current_addr
+
 def OP_28(instr, content) -> int:
     instr.name = "ShowText"
     current_addr = instr.addr + 1
@@ -339,6 +410,18 @@ def OP_29(instr, content) -> int:
 
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     return current_addr
+def OP_2A(instr, content) -> int:
+    instr.name = "OP_2A"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.STR)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr
+
+def OP_2B(instr, content) -> int:
+    instr.name = "OP_2B"
+    current_addr = instr.addr + 1
+    return current_addr
+
 def OP_2C(instr, content) -> int:
     instr.name = "OP_2C"
     current_addr = instr.addr + 1
@@ -365,6 +448,19 @@ def OP_2F(instr, content) -> int:
 
     current_addr = AddOperand(instr, current_addr, content, Type.U16)
     return current_addr
+def OP_30(instr, content) -> int:
+    instr.name = "OP_30"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+
+    while (content[current_addr]!=0):
+        current_addr = AddOperand(instr, current_addr, content, Type.STR)
+
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+
+    return current_addr
+
 def OP_31(instr, content) -> int:
     instr.name = "OP_31"
     current_addr = instr.addr + 1
@@ -372,7 +468,14 @@ def OP_31(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U32)
     return current_addr
+def OP_32(instr, content) -> int:
+    instr.name = "OP_32"
+    current_addr = instr.addr + 1
 
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+
+    return current_addr
 def OP_33(instr, content) -> int:
     instr.name = "OP_33"
     current_addr = instr.addr + 1
@@ -413,8 +516,26 @@ def OP_37(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.S32)
     return current_addr
 
+def OP_38(instr, content) -> int:
+    instr.name = "OP_38"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    return current_addr
+
 def OP_39(instr, content) -> int:
     instr.name = "OP_39"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    return current_addr
+
+def OP_3A(instr, content) -> int:
+    instr.name = "OP_3A"
     current_addr = instr.addr + 1
 
     current_addr = AddOperand(instr, current_addr, content, Type.S32)
@@ -479,6 +600,14 @@ def OP_42(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.U32)
     return current_addr
 
+def OP_43(instr, content) -> int:
+    instr.name = "OP_43"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr
+
 def OP_44(instr, content) -> int:
     instr.name = "OP_44"
     current_addr = instr.addr + 1
@@ -500,6 +629,19 @@ def OP_46(instr, content) -> int:
 def OP_47(instr, content) -> int:
     instr.name = "OP_47"
     current_addr = instr.addr + 1
+    return current_addr
+
+def OP_48(instr, content) -> int:
+    instr.name = "OP_48"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr
+
+def OP_49(instr, content) -> int:
+    instr.name = "OP_49"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
     return current_addr
 
 def OP_4B(instr, content) -> int:
@@ -566,6 +708,11 @@ def OP_56(instr, content) -> int:
     instr.name = "OP_56"
     current_addr = instr.addr + 1
     return current_addr
+def OP_58(instr, content) -> int:
+    instr.name = "OP_58"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    return current_addr
 
 def OP_5A(instr, content) -> int:
     instr.name = "OP_5A"
@@ -611,6 +758,13 @@ def OP_60(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     return current_addr
 
+def OP_61(instr, content) -> int:
+    instr.name = "OP_61"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr
+
 def OP_62(instr, content) -> int:
     instr.name = "OP_62"
     current_addr = instr.addr + 1
@@ -645,6 +799,13 @@ def OP_65(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     return current_addr
 
+def OP_66(instr, content) -> int:
+    instr.name = "OP_66"
+    current_addr = instr.addr + 1
+
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    return current_addr
+
 def OP_67(instr, content) -> int:
     instr.name = "OP_67"
     current_addr = instr.addr + 1
@@ -669,6 +830,27 @@ def OP_6C(instr, content) -> int:
 
     return current_addr
 
+def OP_6D(instr, content) -> int:
+    instr.name = "OP_6D"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr
+
+def OP_6E(instr, content) -> int:
+    instr.name = "OP_6E"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr
+
+def OP_70(instr, content) -> int:
+    instr.name = "OP_70"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    return current_addr
+
 def OP_78(instr, content) -> int:
     instr.name = "OP_78"
     current_addr = instr.addr + 1
@@ -681,16 +863,68 @@ def OP_7A(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     return current_addr
 
+def OP_7D(instr, content) -> int:
+    instr.name = "OP_7D"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    return current_addr
+
+def OP_7E(instr, content) -> int:
+    instr.name = "OP_7E"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    return current_addr
+
 def OP_80(instr, content) -> int:
     instr.name = "OP_80"
     current_addr = instr.addr + 1
     current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr
+def OP_81(instr, content) -> int:
+    instr.name = "OP_81"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    return current_addr
+
+def OP_82(instr, content) -> int:
+    instr.name = "OP_82"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    return current_addr
+
+def OP_83(instr, content) -> int:
+    instr.name = "OP_83"
+    current_addr = instr.addr + 1
     return current_addr
 
 def OP_84(instr, content) -> int:
     instr.name = "OP_84"
     current_addr = instr.addr + 1
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    return current_addr
+
+def OP_85(instr, content) -> int:
+    instr.name = "OP_85"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    return current_addr
+
+def OP_86(instr, content) -> int:
+    instr.name = "OP_86"
+    current_addr = instr.addr + 1
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U32)
     return current_addr
 
 def OP_87(instr, content) -> int:
@@ -716,10 +950,10 @@ instruction_set = {
                 0x0A:OP_0A,   #0x4763F0
                 0x0B:OP_0B,   #0x476680
                 0x0C:OP_0C,   #0x476950
-                #0x0D:OP_0D,   #0x476B10
+                0x0D:OP_0D,   #0x476B10
                 0x0E:OP_0E,   #0x476C80
-                #0x0F:OP_0F,   #0x476E10
-                #0x10:OP_10,   #0x477060
+                0x0F:OP_0F,   #0x476E10
+                0x10:OP_10,   #0x477060
                 0x11:OP_11,   #0x477150
                 0x12:OP_12,   #0x477410
                 0x13:OP_13,   #0x4774A0
@@ -728,40 +962,40 @@ instruction_set = {
                 0x16:OP_16,   #0x4775C0
                 0x17:OP_17,   #0x4775F0
                 0x18:OP_18,   #0x477620
-                #0x19:OP_19,   #0x477AE0
-                #0x1A:OP_1A,   #0x477E40
+                0x19:OP_19,   #0x477AE0
+                0x1A:OP_1A,   #0x477E40
                 0x1B:OP_1B,   #0x4759C0
                 0x1C:OP_1C,   #0x478040
                 0x1D:OP_1D,   #0x478110
                 0x1E:OP_1E,   #0x478240
-                #0x1F:OP_1F,   #0x478990
+                0x1F:OP_1F,   #0x478990
                 0x20:OP_20,   #0x4784B0
                 0x21:OP_21,   #0x478740
                 0x22:OP_22,   #0x478A10
                 0x23:OP_23,   #0x478AA0
                 0x24:OP_24,   #0x478B20
                 0x25:OP_25,   #0x478D40
-                #0x26:OP_26,   #0x478E20
+                0x26:OP_26,   #0x478E20
                 #0x27:OP_27,   #0x478EB0
                 0x28:OP_28,   #0x478F40
                 0x29:OP_29,   #0x478FF0
-                #0x2A:OP_2A,   #0x479070
-                #0x2B:OP_2B,   #0x479180
+                0x2A:OP_2A,   #0x479070
+                0x2B:OP_2B,   #0x479180
                 0x2C:OP_2C,   #0x4791F0
                 0x2D:OP_2D,   #0x479250
                 0x2E:OP_2E,   #0x479280
                 0x2F:OP_2F,   #0x47A2A0
-                #0x30:OP_30,   #0x47A340
+                0x30:OP_30,   #0x47A340
                 0x31:OP_31,   #0x479330
-                #0x32:OP_32,   #0x47A420
+                0x32:OP_32,   #0x47A420
                 0x33:OP_33,   #0x47A460
                 0x34:OP_34,   #0x479370
                 0x35:OP_35,   #0x479390
                 0x36:OP_36,   #0x479650
                 0x37:OP_37,   #0x479720
-                #0x38:OP_38,   #0x4797C0
+                0x38:OP_38,   #0x4797C0
                 0x39:OP_39,   #0x4798B0
-                #0x3A:OP_3A,   #0x479900
+                0x3A:OP_3A,   #0x479900
                 0x3B:OP_3B,   #0x479950
                 0x3C:OP_3C,   #0x4799A0
                 0x3D:OP_3D,   #0x479A90
@@ -770,13 +1004,13 @@ instruction_set = {
                 0x40:OP_40,   #0x479CC0
                 0x41:OP_41,   #0x479BA0
                 0x42:OP_42,   #0x479C00
-                #0x43:OP_43,   #0x479CF0
+                0x43:OP_43,   #0x479CF0
                 0x44:OP_44,   #0x479D70
                 0x45:OP_45,   #0x479E20
                 0x46:OP_46,   #0x479E80
                 0x47:OP_47,   #0x479EC0
-                #0x48:OP_48,   #0x479F40
-                #0x49:OP_49,   #0x479FA0
+                0x48:OP_48,   #0x479F40
+                0x49:OP_49,   #0x479FA0
                 #0x4A:OP_4A,   #0x47A250
                 0x4B:OP_4B,   #0x47A4A0
                 0x4C:OP_4C,   #0x47A770
@@ -791,7 +1025,7 @@ instruction_set = {
                 0x55:OP_55,   #0x47A990
                 0x56:OP_56,   #0x47AA00
                 #0x57:OP_57,   #0x47AA50
-                #0x58:OP_58,   #0x47AAD0
+                0x58:OP_58,   #0x47AAD0
                 #0x59:OP_59,   #0x47AAF0
                 0x5A:OP_5A,   #0x47AB20
                 0x5B:OP_5B,   #0x47AB60
@@ -800,22 +1034,22 @@ instruction_set = {
                 0x5E:OP_5E,   #0x47AC90
                 0x5F:OP_5F,   #0x47AD30
                 0x60:OP_60,   #0x47AE20
-                #0x61:OP_61,   #0x47AEE0
+                0x61:OP_61,   #0x47AEE0
                 0x62:OP_62,   #0x47AF20
                 0x63:OP_63,   #0x47AFD0
                 0x64:OP_64,   #0x47B070
                 0x65:OP_65,   #0x47B0B0
-                #0x66:OP_66,   #0x47B120
+                0x66:OP_66,   #0x47B120
                 0x67:OP_67,   #0x47B150
                 #0x68:OP_68,   #0x47B230
                 0x69:OP_69,   #0x47B240
                 0x6A:OP_6A,   #0x47B270
                 #0x6B:OP_6B,   #0x47B2B0
                 0x6C:OP_6C,   #0x47B300
-                #0x6D:OP_6D,   #0x47B340
-                #0x6E:OP_6E,   #0x47B370
+                0x6D:OP_6D,   #0x47B340
+                0x6E:OP_6E,   #0x47B370
                 #0x6F:OP_6F,   #0x47B3A0
-                #0x70:OP_70,   #0x47B400
+                0x70:OP_70,   #0x47B400
                 #0x71:OP_71,   #0x47B7F0
                 #0x72:OP_72,   #0x47B870
                 #0x73:OP_73,   #0x47B8E0
@@ -828,16 +1062,16 @@ instruction_set = {
                 0x7A:OP_7A,   #0x47BA40
                 #0x7B:OP_7B,   #0x475A80
                 #0x7C:OP_7C,   #0x475AF0
-                #0x7D:OP_7D,   #0x475B20
-                #0x7E:OP_7E,   #0x475B40
+                0x7D:OP_7D,   #0x475B20
+                0x7E:OP_7E,   #0x475B40
                 #0x7F:OP_7F,   #0x47BA70
                 0x80:OP_80,   #0x4782F0
-                #0x81:OP_81,   #0x4783D0
-                #0x82:OP_82,   #0x478430
-                #0x83:OP_83,   #0x47BAC0
+                0x81:OP_81,   #0x4783D0
+                0x82:OP_82,   #0x478430
+                0x83:OP_83,   #0x47BAC0
                 0x84:OP_84,   #0x47BB30
-                #0x85:OP_85,   #0x47BC70
-                #0x86:OP_86,   #0x47BE50
+                0x85:OP_85,   #0x47BC70
+                0x86:OP_86,   #0x47BE50
                 0x87:OP_87,   #0x47BEC0
                 #0x88:OP_88,   #0x47BF60
                 #0x89:OP_89,   #0x47BFA0 

@@ -87,7 +87,6 @@ def decompile(file):
 
         fun.add_instructions(data)
 
-    print(current_addr)
 
 
 

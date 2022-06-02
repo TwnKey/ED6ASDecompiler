@@ -19,6 +19,8 @@ class function(object):
 
 def decompile(file):
     
+
+    
     filename = Path(file).stem
     filesize = os.path.getsize(file)
     f = open(file, 'rb')
@@ -35,6 +37,23 @@ def decompile(file):
         chip_ids.append(current_chip_id)
         current_chip_id = read_int(data, current_addr, 4)
         current_addr = current_addr + 4
+    current_addr = current_addr + 4
+
+    strings = []
+    while (current_addr < first_sec_addr):
+        output = []
+        char = data[current_addr]
+        text_size = 0
+        while char != 0:
+            text_size = text_size + 1
+            output.append(char)
+            current_addr = current_addr + 1
+            char = data[current_addr]
+        current_addr = current_addr + 1
+        text_size = text_size + 1
+        str = bytes(output).decode("cp932")
+        strings.append(str)
+
 
     functions = []
 
@@ -65,6 +84,7 @@ def decompile(file):
     functions.sort(key=lambda fun: fun.ID) 
 
     for fun in functions:
+
         fun.add_instructions(data)
 
     print(current_addr)

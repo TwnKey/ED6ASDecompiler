@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31613.86
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ED6ASDecompiler", "ED6ASDecompiler\ED6ASDecompiler.pyproj", "{C60FEEF3-3688-4EF7-A167-A1D036F13277}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C60FEEF3-3688-4EF7-A167-A1D036F13277}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C60FEEF3-3688-4EF7-A167-A1D036F13277}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {75D6D530-4DCB-48F4-ADB9-68E0BFC398A4}
+	EndGlobalSection
+EndGlobal

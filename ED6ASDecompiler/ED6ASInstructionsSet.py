@@ -1076,7 +1076,28 @@ instruction_set = {
                 #0x89:OP_89,   #0x47BFA0 
 }
 
-
+def wrap_operand_type(op)->str:
+    current_op = op
+    type_op = current_op.type
+    value = current_op.value
+    result = ""
+    if (type_op == Type.STR):
+        result = result + "STR(\"" + value + "\")"
+    elif (type_op == Type.STRFIXED):
+        result = result + "FIXED_LENGTH(\"" + value + "\", " + str(current_op.bytes_length) + ")"
+    elif (type_op == Type.S16):
+        result = result + "SIGNED_16(" + str(int(value)) + ")"
+    elif (type_op == Type.S32):
+        result = result + "SIGNED_32(" + str(int(value)) + ")"
+    elif (type_op == Type.U8):
+        result = result + "U8(" + str(int(value)) + ")"
+    elif (type_op == Type.U16):
+        result = result + "U16(" + str(int(value)) + ")"
+    elif (type_op == Type.U32):
+        result = result + "U32(" + str(int(value)) + ")"
+    elif (type_op == Type.FLOAT):
+        result = result + "FLOAT(" + str(float(value)) + ")"
+    return result
 
 class instruction(object):
     """description of class"""
@@ -1093,38 +1114,18 @@ class instruction(object):
             raise Exception("Wrong OP Code ", hex(self.op_code), " at addr ", hex(self.addr))
 
 
+    
+
     def to_string(self)->str:
-        result = self.name + "("
+        result = self.name + "(["
         for operand_id in range(len(self.operands)-1):
             current_op = self.operands[operand_id]
-            type_op = current_op.type
-            value = current_op.value
-
-            if (type_op == Type.STR):
-                result = result + "\"" + value + "\""
-            elif (type_op == Type.STRFIXED):
-                result = result + "FIXED_LENGTH(\"" + value + "\", " + str(current_op.bytes_length) + ")"
-            elif (type_op == Type.S16) or (type_op == Type.S32) or (type_op == Type.U8) or (type_op == Type.U16) or (type_op == Type.U32):
-               
-                result = result + str(int(value))
-            elif (type_op == Type.FLOAT):
-                
-                result = result + str(float(value))
-            result = result + ", "
+            wrapped = wrap_operand_type(current_op)
+            result = result + wrapped + ", "
         if len(self.operands) > 0:
             current_op = self.operands[len(self.operands)-1]
-            type_op = current_op.type
-            value = current_op.value
-            if (type_op == Type.STR):
-                result = result + "\"" + value + "\""
-            elif (type_op == Type.STRFIXED):
-                result = result + "FIXED_LENGTH(\"" + value + "\", " + str(current_op.bytes_length) + ")"
-            elif (type_op == Type.S16) or (type_op == Type.S32) or (type_op == Type.U8) or (type_op == Type.U16) or (type_op == Type.U32):
-                value = self.operands[len(self.operands)-1].value
-                result = result + str(int(value))
-            elif (type_op == Type.FLOAT):
-                value = self.operands[len(self.operands)-1].value
-                result = result + str(float(value))
+            wrapped = wrap_operand_type(current_op)
+            result = result + wrapped
 
-        result = result + ")"
+        result = result + "])"
         return result

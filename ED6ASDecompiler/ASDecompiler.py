@@ -100,7 +100,7 @@ def decompile(file):
          
     functions[len(functions)-1].addr_end = filesize
 
-    functions.sort(key=lambda fun: fun.ID) 
+    #functions.sort(key=lambda fun: fun.ID) 
 
     for fun in functions:
         fun.add_instructions(data)
@@ -116,6 +116,7 @@ def to_py(ASF : ASFile):
     python_file = open(ASF.name + ".py", "wt",encoding='utf8')
     python_file.write("from ASCompiler import *\n\n")
     python_file.write("def script():\n")
+    python_file.write("\n    set_script(\"" + ASF.name + "\")\n")
     python_file.write("\n    set_chips([")
     for id_in in range(len(ASF.chip_ids) - 1):
         python_file.write(hex(ASF.chip_ids[id_in]) + ", ")
@@ -144,8 +145,8 @@ def to_py(ASF : ASFile):
         python_file.write("# Original addresses " + hex(ASF.functions[id_in].addr_start) + " - " + hex(ASF.functions[id_in].addr_end) +"\n\n")
         python_file.write("    set_current_function(id = " + hex(ASF.functions[id_in].ID) + ")\n\n")
         python_file.write(ASF.functions[id_in].to_string())
-
-    python_file.write("\n    compile()")
+        
+    python_file.write("\n    assemble()")
     python_file.write("\n\nscript()")
     python_file.close()
 

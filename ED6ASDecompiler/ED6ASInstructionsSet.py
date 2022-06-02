@@ -40,7 +40,6 @@ class operand:
             text_size = text_size + 1
             if (type == Type.STR):
                 self.bytes_length = text_size
-
             self.value = bytes(output).decode("cp932")
         elif (type == Type.U8):
             self.value = content[addr]
@@ -1087,27 +1086,45 @@ class instruction(object):
         self.operands = []
         self.name = ""
         self.text_before = ""
-        print(hex(addr), " ", hex(self.op_code))
+        #print(hex(addr), " ", hex(self.op_code))
         try:
             self.end_addr = instruction_set[self.op_code](self, content)
         except:
             raise Exception("Wrong OP Code ", hex(self.op_code), " at addr ", hex(self.addr))
 
 
-    def to_string(self, stream)->str:
-        result = self.text_before + self.name + "("
+    def to_string(self)->str:
+        result = self.name + "("
         for operand_id in range(len(self.operands)-1):
-            value = self.operands[operand_id].value
-            if (type(value) == str):
+            current_op = self.operands[operand_id]
+            type_op = current_op.type
+            value = current_op.value
+
+            if (type_op == Type.STR):
                 result = result + "\"" + value + "\""
-            else:
+            elif (type_op == Type.STRFIXED):
+                result = result + "FIXED_LENGTH(\"" + value + "\", " + str(current_op.bytes_length) + ")"
+            elif (type_op == Type.S16) or (type_op == Type.S32) or (type_op == Type.U8) or (type_op == Type.U16) or (type_op == Type.U32):
+               
                 result = result + str(int(value))
+            elif (type_op == Type.FLOAT):
+                
+                result = result + str(float(value))
             result = result + ", "
         if len(self.operands) > 0:
-            value = self.operands[len(self.operands)-1].value
-            if (type(value) == str):
+            current_op = self.operands[len(self.operands)-1]
+            type_op = current_op.type
+            value = current_op.value
+            if (type_op == Type.STR):
                 result = result + "\"" + value + "\""
-            else:
+            elif (type_op == Type.STRFIXED):
+                result = result + "FIXED_LENGTH(\"" + value + "\", " + str(current_op.bytes_length) + ")"
+            elif (type_op == Type.S16) or (type_op == Type.S32) or (type_op == Type.U8) or (type_op == Type.U16) or (type_op == Type.U32):
+                value = self.operands[len(self.operands)-1].value
                 result = result + str(int(value))
+            elif (type_op == Type.FLOAT):
+                value = self.operands[len(self.operands)-1].value
+                result = result + str(float(value))
+
         result = result + ")"
         return result

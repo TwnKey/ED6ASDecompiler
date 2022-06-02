@@ -24,6 +24,7 @@ def main() -> None:
         raise Exception("ASDecompiler needs a file to decompile!")
     else:
         decompiled = ASDecompiler.decompile(args.file)
+        ASDecompiler.to_py(decompiled)
     
         
 

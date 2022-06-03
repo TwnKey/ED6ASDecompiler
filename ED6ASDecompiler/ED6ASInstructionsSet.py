@@ -2,6 +2,7 @@ from enum import Enum
 import struct
 
 class Type(Enum):
+    UNDEF = 0
     FLOAT = 1
     S16 = 2
     S32 = 3
@@ -13,46 +14,47 @@ class Type(Enum):
 
 
 class operand:
-    def __init__(self, addr, content, type, fixed_length = -1):
+    def __init__(self, addr = None, content = None, value = None, type = Type.UNDEF, fixed_length = -1):
 
         self.bytes_length = fixed_length
         self.type = type
-
-        if (type == Type.FLOAT):
-            self.value = struct.unpack("<f", content[addr:addr+4])[0]
-            self.bytes_length = 4 
-        elif (type == Type.S16):
-            self.value = struct.unpack("<h", content[addr:addr+2])[0]
-            self.bytes_length = 2 
-        elif (type == Type.S32):
-            self.value = struct.unpack("<i", content[addr:addr+4])[0]
-            self.bytes_length = 4
-        elif (type == Type.STR) or (type == Type.STRFIXED):
-            output = []
-            char = content[addr]
-            text_size = 0
-            
-            while char != 0:
-                text_size = text_size + 1
-                output.append(char)
-                addr = addr + 1
+        if (addr != None) and (content != None):
+            if (type == Type.FLOAT):
+                self.value = struct.unpack("<f", content[addr:addr+4])[0]
+                self.bytes_length = 4 
+            elif (type == Type.S16):
+                self.value = struct.unpack("<h", content[addr:addr+2])[0]
+                self.bytes_length = 2 
+            elif (type == Type.S32):
+                self.value = struct.unpack("<i", content[addr:addr+4])[0]
+                self.bytes_length = 4
+            elif (type == Type.STR) or (type == Type.STRFIXED):
+                output = []
                 char = content[addr]
-            text_size = text_size + 1
-            if (type == Type.STR):
-                self.bytes_length = text_size
-            self.value = bytes(output).decode("cp932")
-        elif (type == Type.U8):
-            self.value = content[addr]
-            self.bytes_length = 1
-        elif (type == Type.U16):
-            self.value = struct.unpack("<H", content[addr:addr+2])[0]
-            self.bytes_length = 2
-        elif (type == Type.U32):
-            self.value = struct.unpack("<I", content[addr:addr+4])[0]
-            self.bytes_length = 4
-        
+                text_size = 0
+            
+                while char != 0:
+                    text_size = text_size + 1
+                    output.append(char)
+                    addr = addr + 1
+                    char = content[addr]
+                text_size = text_size + 1
+                if (type == Type.STR):
+                    self.bytes_length = text_size
+                self.value = bytes(output).decode("cp932")
+            elif (type == Type.U8):
+                self.value = content[addr]
+                self.bytes_length = 1
+            elif (type == Type.U16):
+                self.value = struct.unpack("<H", content[addr:addr+2])[0]
+                self.bytes_length = 2
+            elif (type == Type.U32):
+                self.value = struct.unpack("<I", content[addr:addr+4])[0]
+                self.bytes_length = 4
+        elif value != None:
+            self.value = value
 def AddOperand(instr, addr, content, type)->int:
-    op = operand(addr, content, type)
+    op = operand(addr, content, None, type)
     instr.operands.append(op)
     return addr + op.bytes_length
 
@@ -1082,7 +1084,7 @@ def wrap_operand_type(op)->str:
     value = current_op.value
     result = ""
     if (type_op == Type.STR):
-        result = result + "STR(\"" + value + "\")"
+        result = result + "\"" + value.replace("\\", "\\\\") + "\""
     elif (type_op == Type.STRFIXED):
         result = result + "FIXED_LENGTH(\"" + value + "\", " + str(current_op.bytes_length) + ")"
     elif (type_op == Type.S16):
@@ -1117,7 +1119,10 @@ class instruction(object):
     
 
     def to_string(self)->str:
-        result = self.name + "(["
+        result = self.name + "("
+        if len(self.operands)>0:
+            result = result + "["
+
         for operand_id in range(len(self.operands)-1):
             current_op = self.operands[operand_id]
             wrapped = wrap_operand_type(current_op)
@@ -1125,7 +1130,7 @@ class instruction(object):
         if len(self.operands) > 0:
             current_op = self.operands[len(self.operands)-1]
             wrapped = wrap_operand_type(current_op)
-            result = result + wrapped
+            result = result + wrapped + "]"
 
-        result = result + "])"
+        result = result + ")"
         return result

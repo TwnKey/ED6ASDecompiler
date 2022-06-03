@@ -1,6 +1,7 @@
 import struct
 from ED6ASInstructionsSet import Type, operand
-
+import codecs 
+import CustomCodec
 class BinASFile(object):
     def __init__(self, name):
         self.bin_strings = bytearray()
@@ -24,6 +25,12 @@ bin_map = {}
 map_id_ptr = {} #key : id, value : ptr
 map_loc = {} #key : loc, value : ptr
 pointers = []
+
+
+
+def fix_encoding(string):
+    string.replace("é", "\xE9")
+    return string
 
 def set_chips(chip_ids):
     global currentASFile
@@ -66,7 +73,8 @@ def SetLoc(name):
 
 def compile_str(value):
     global current_bin_function
-    current_bin_function = current_bin_function + bytearray(value.encode("cp932")) + bytearray(struct.pack("<B",0))
+    value = fix_encoding(value)
+    current_bin_function = current_bin_function + bytearray(codecs.encode(value, "sora_fr", "backslashreplace")) + bytearray(struct.pack("<B",0))
 
 def compile_fixed_length(value, size):
     global current_bin_function

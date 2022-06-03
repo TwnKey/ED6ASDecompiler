@@ -214,11 +214,12 @@ def OP_11(instr, content) -> int:
     instr.name = "OP_11"
     current_addr = instr.addr + 1
 
-    current_addr = AddOperand(instr, current_addr, content, Type.U16)
-    current_addr = AddOperand(instr, current_addr, content, Type.U32)
-    current_addr = AddOperand(instr, current_addr, content, Type.U32)
-    current_addr = AddOperand(instr, current_addr, content, Type.U32)
-    current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.S16)
+    current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    current_addr = AddOperand(instr, current_addr, content, Type.S32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
     return current_addr
 
 def OP_12(instr, content) -> int:
@@ -370,7 +371,7 @@ def OP_22(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U16)
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
-    
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
     return current_addr
 def OP_23(instr, content) -> int:
     instr.name = "OP_23"
@@ -666,7 +667,7 @@ def OP_4B(instr, content) -> int:
 def OP_4C(instr, content) -> int:
     instr.name = "OP_4C"
     current_addr = instr.addr + 1
-    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.POINTER)
     return current_addr
 
 def OP_4D(instr, content) -> int:
@@ -683,7 +684,7 @@ def OP_4E(instr, content) -> int:
 def OP_50(instr, content) -> int:
     instr.name = "OP_50"
     current_addr = instr.addr + 1
-    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.POINTER)
     return current_addr
 
 def OP_51(instr, content) -> int:

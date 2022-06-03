@@ -33,6 +33,8 @@ class function(object):
         for instr in self.instructions:
             if instr.addr in locations.keys():
                 result = result + "\n    SetLoc(\"" + locations[instr.addr] + "\")\n\n"
+            if instr.addr in ED6ASInstructionsSet.location_map.keys():
+                result = result + "\n    SetLoc(\"" + ED6ASInstructionsSet.location_map[instr.addr] + "\")\n\n"
             result = result + "    " + instr.to_string() + "\n"
         return result
 
@@ -112,7 +114,7 @@ def decompile(file):
     while (current_addr < second_sec_addr):
         ptr = read_int(data, current_addr, 2)
         if ptr not in result.locations_dict.keys():
-            result.locations_dict[ptr] = "LOC_" + str(hex(ID_loc))
+            result.locations_dict[ptr] = "FUN_" + str(hex(ID_loc))
             ID_loc = ID_loc + 1
 
         result.locations.append(result.locations_dict[ptr])

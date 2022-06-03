@@ -3,22 +3,27 @@ from ED6ASInstructionsSet import Type, operand
 
 class BinASFile(object):
     def __init__(self, name):
-        self.bin_strings = bytes()
-        self.bin_strings2 = bytes()
-        self.bin_chip_ids = bytes()
+        self.bin_strings = bytearray()
+        self.bin_strings2 = bytearray()
+        self.bin_chip_ids = bytearray()
         self.bin_functions = [] #will contain the binary content of each function separately, and then we will "share" the pointers of the identical ones
-        self.bin_no_idea_bytes = bytes() 
+        self.bin_no_idea_bytes = bytearray() 
         self.locations = []
 
+class pointer(object):
+    def __init__(self, addr, dest):
+        self.addr = addr
+        self.destination = dest
+
 currentASFile = BinASFile("dummy")
-current_bin_function = bytes()
+current_bin_function = bytearray()
 current_function_id = -1
 function_addrs = []
 current_addr = 0
 bin_map = {}
 map_id_ptr = {} #key : id, value : ptr
 map_loc = {} #key : loc, value : ptr
-
+pointers = []
 
 def set_chips(chip_ids):
     global currentASFile
@@ -29,18 +34,18 @@ def set_chips(chip_ids):
 def set_strings(strings):
     global currentASFile
     for str in strings:
-        currentASFile.bin_strings = currentASFile.bin_strings + bytes(str.encode("cp932")) + bytes(struct.pack("<B",0))
-    currentASFile.bin_strings = currentASFile.bin_strings + bytes(struct.pack("<B",0))
+        currentASFile.bin_strings = currentASFile.bin_strings + bytearray(str.encode("cp932")) + bytearray(struct.pack("<B",0))
+    currentASFile.bin_strings = currentASFile.bin_strings + bytearray(struct.pack("<B",0))
 def set_strings2(value, strings):
     global currentASFile
-    currentASFile.bin_strings2 = currentASFile.bin_strings2 + bytes(struct.pack("<B",value))
+    currentASFile.bin_strings2 = currentASFile.bin_strings2 + bytearray(struct.pack("<B",value))
     for str in strings:
-        currentASFile.bin_strings2 = currentASFile.bin_strings2 + bytes(str.encode("cp932")) + bytes(struct.pack("<B",0))
+        currentASFile.bin_strings2 = currentASFile.bin_strings2 + bytearray(str.encode("cp932")) + bytearray(struct.pack("<B",0))
     if len(strings) > 0:
-        currentASFile.bin_strings2 = currentASFile.bin_strings2 + bytes(struct.pack("<B",0))
+        currentASFile.bin_strings2 = currentASFile.bin_strings2 + bytearray(struct.pack("<B",0))
 def set_mysterious_bytes(bs):
     global currentASFile
-    currentASFile.bin_no_idea_bytes = bytes(bs)
+    currentASFile.bin_no_idea_bytes = bytearray(bs)
 
 def set_script(name):
     global currentASFile
@@ -61,43 +66,46 @@ def SetLoc(name):
 
 def compile_str(value):
     global current_bin_function
-    current_bin_function = current_bin_function + bytes(value.encode("cp932")) + bytes(struct.pack("<B",0))
+    current_bin_function = current_bin_function + bytearray(value.encode("cp932")) + bytearray(struct.pack("<B",0))
 
 def compile_fixed_length(value, size):
     global current_bin_function
-    bin_text = bytes(value.encode("cp932"))
+    bin_text = bytearray(value.encode("cp932"))
     current_bin_function = current_bin_function + bin_text
     to_pad = size - len(bin_text)
-    pad_array = bytes()
+    pad_array = bytearray()
     for i in range(to_pad):
         pad_array.append(0)
     current_bin_function = current_bin_function + pad_array
 
 def compile_s16(value):
     global current_bin_function
-    current_bin_function = current_bin_function + bytes(struct.pack("<h",value))
+    current_bin_function = current_bin_function + bytearray(struct.pack("<h",value))
 
 def compile_u8(value):
     global current_bin_function
-    current_bin_function = current_bin_function + bytes(struct.pack("<B",value))
+    current_bin_function = current_bin_function + bytearray(struct.pack("<B",value))
 
 def compile_u16(value):
     global current_bin_function
-    current_bin_function = current_bin_function + bytes(struct.pack("<H",value))
+    current_bin_function = current_bin_function + bytearray(struct.pack("<H",value))
 
 def compile_u32(value):
     global current_bin_function
-    current_bin_function = current_bin_function + bytes(struct.pack("<I",value))
+    current_bin_function = current_bin_function + bytearray(struct.pack("<I",value))
 
 def compile_s32(value):
     global current_bin_function
-    current_bin_function = current_bin_function + bytes(struct.pack("<i",value))
+    current_bin_function = current_bin_function + bytearray(struct.pack("<i",value))
     
 def compile_float(value):
     global current_bin_function
-    current_bin_function = current_bin_function + bytes(struct.pack("<f",value))
+    current_bin_function = current_bin_function + bytearray(struct.pack("<f",value))
 
 def compile_arg(op):
+    global current_addr
+    global current_bin_function
+    global pointers
     if (op.type == Type.FLOAT):
         compile_float(op.value)
     elif (op.type == Type.S16):
@@ -114,6 +122,11 @@ def compile_arg(op):
         compile_u16(op.value)
     elif (op.type == Type.U32):
         compile_u32(op.value)
+    elif (op.type == Type.POINTER):
+        pointers.append(pointer(current_addr, op.value))
+        compile_u16(0) #placeholder
+
+    current_addr = len(current_bin_function)
 
 def FIXED_LENGTH(value, sz):
     return operand(None, None, value, Type.STRFIXED, sz)
@@ -129,12 +142,14 @@ def U32(value):
     return operand(None, None, value, Type.U32)
 def FLOAT(value):
     return operand(None, None, value, Type.FLOAT)
-
+def POINTER(value):
+    return operand(None, None, value, Type.POINTER)
 
 def compile_function(OP, args):
     global current_bin_function
     global current_addr
     current_bin_function = current_bin_function + bytearray(struct.pack("<B",OP))
+    current_addr = len(current_bin_function)
     for arg in args:
         if (type(arg) == str):
             compile_arg(operand(None, None, arg, Type.STR))
@@ -176,15 +191,19 @@ def assemble():
     else:
         third_addr = 0
 
-    bin_ptrs = bytes()
+    bin_ptrs = bytearray()
     for loc in currentASFile.locations:
-        bin_ptrs = bin_ptrs + bytes(struct.pack("<H", map_loc[loc] + actual_function_start))
+        bin_ptrs = bin_ptrs + bytearray(struct.pack("<H", map_loc[loc] + actual_function_start))
+    for ptr in pointers:
+        bytes_dest = struct.pack("<H",map_loc[ptr.destination] + actual_function_start)
+        current_bin_function[ptr.addr] = bytes_dest[0]
+        current_bin_function[ptr.addr + 1] = bytes_dest[1]
 
-    file = bytes(struct.pack("<H",addr_ptrs))
-    file = file + bytes(struct.pack("<H",second_addr))
-    file = file + bytes(struct.pack("<H",third_addr))
+    file = bytearray(struct.pack("<H",addr_ptrs))
+    file = file + bytearray(struct.pack("<H",second_addr))
+    file = file + bytearray(struct.pack("<H",third_addr))
     file = file + currentASFile.bin_chip_ids
-    file = file + bytes(struct.pack("<I",0xFFFFFFFF))
+    file = file + bytearray(struct.pack("<I",0xFFFFFFFF))
     file = file + currentASFile.bin_strings
     file = file + currentASFile.bin_strings2
     file = file + bin_ptrs

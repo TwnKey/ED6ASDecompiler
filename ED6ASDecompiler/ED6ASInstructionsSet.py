@@ -1,6 +1,8 @@
 from enum import Enum
 import struct
 
+location_map = {}
+
 class Type(Enum):
     UNDEF = 0
     FLOAT = 1
@@ -11,11 +13,12 @@ class Type(Enum):
     U8 = 6
     U16 = 7
     U32 = 8
+    POINTER = 9
 
 
 class operand:
     def __init__(self, addr = None, content = None, value = None, type = Type.UNDEF, fixed_length = -1):
-
+        global location_map
         self.bytes_length = fixed_length
         self.type = type
         if (addr != None) and (content != None):
@@ -51,6 +54,12 @@ class operand:
             elif (type == Type.U32):
                 self.value = struct.unpack("<I", content[addr:addr+4])[0]
                 self.bytes_length = 4
+            elif (type == Type.POINTER):
+                addr = struct.unpack("<H", content[addr:addr+2])[0]
+                self.bytes_length = 2
+                if addr not in location_map:
+                    location_map[addr] = "LOC_" + str(hex(len(location_map.items())))
+                self.value = location_map[addr]
         elif value != None:
             self.value = value
 def AddOperand(instr, addr, content, type)->int:
@@ -67,7 +76,7 @@ def OP_01(instr, content) -> int:
     instr.name = "OP_01"
     current_addr = instr.addr + 1
     
-    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.POINTER)
 
     return current_addr 
 
@@ -651,7 +660,7 @@ def OP_4B(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U32)
-    current_addr = AddOperand(instr, current_addr, content, Type.U16)
+    current_addr = AddOperand(instr, current_addr, content, Type.POINTER)
     return current_addr
 
 def OP_4C(instr, content) -> int:
@@ -1092,13 +1101,15 @@ def wrap_operand_type(op)->str:
     elif (type_op == Type.S32):
         result = result + "SIGNED_32(" + str(int(value)) + ")"
     elif (type_op == Type.U8):
-        result = result + "U8(" + str(int(value)) + ")"
+        result = result + "U8(" + str(hex(int(value))) + ")"
     elif (type_op == Type.U16):
-        result = result + "U16(" + str(int(value)) + ")"
+        result = result + "U16(" + str(hex(int(value))) + ")"
     elif (type_op == Type.U32):
-        result = result + "U32(" + str(int(value)) + ")"
+        result = result + "U32(" + str(hex(int(value))) + ")"
     elif (type_op == Type.FLOAT):
         result = result + "FLOAT(" + str(float(value)) + ")"
+    elif (type_op == Type.POINTER):
+        result = result + "POINTER(\"" + value + "\")"
     return result
 
 class instruction(object):

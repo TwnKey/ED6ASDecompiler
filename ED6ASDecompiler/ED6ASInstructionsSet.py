@@ -368,9 +368,8 @@ def OP_21(instr, content) -> int:
 def OP_22(instr, content) -> int:
     instr.name = "OP_22"
     current_addr = instr.addr + 1
-    current_addr = AddOperand(instr, current_addr, content, Type.U8)
     current_addr = AddOperand(instr, current_addr, content, Type.U16)
-    current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.POINTER)
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
     return current_addr
 def OP_23(instr, content) -> int:
@@ -761,6 +760,7 @@ def OP_5F(instr, content) -> int:
     instr.name = "OP_5F"
     current_addr = instr.addr + 1
     current_addr = AddOperand(instr, current_addr, content, Type.U8)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
     return current_addr
 def OP_60(instr, content) -> int:
     instr.name = "OP_60"
@@ -945,6 +945,7 @@ def OP_87(instr, content) -> int:
     current_addr = AddOperand(instr, current_addr, content, Type.U16)
     current_addr = AddOperand(instr, current_addr, content, Type.U16)
     current_addr = AddOperand(instr, current_addr, content, Type.U32)
+    current_addr = AddOperand(instr, current_addr, content, Type.U8)
     return current_addr
 
 instruction_set = {
